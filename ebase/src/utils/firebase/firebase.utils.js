@@ -15,20 +15,21 @@ const firebaseConfig = {
   // Initialize Firebase
   const firebaseApp = initializeApp(firebaseConfig);
 
-    const googleprovider = new GoogleAuthProvider();
+    const provider = new GoogleAuthProvider();
 
-  googleprovider.setCustomParameters({
+  provider.setCustomParameters({
     prompt:"select_account"
   });
 
   export const auth = getAuth();
 
-  export const signInWithGooglePopup = () => signInWithPopup(auth, googleprovider);
+  export const signInWithGooglePopup = () => signInWithPopup(auth, provider);
 
 
   export const db = getFirestore();
 
-  export const CreateUserDocumentFromAuth = async (userAuth) => {
+  export const CreateUserDocumentFromAuth = async (userAuth, additionalInformation = {}) => {
+    if(!userAuth) return;
     const userDocRef = doc(db, 'users', userAuth.uid);
     console.log(userDocRef);
 
@@ -48,7 +49,8 @@ const firebaseConfig = {
         await setDoc(userDocRef, {
           displayName,
           email,
-          createdAt
+          createdAt,
+          ...additionalInformation
         });
       } catch(error) {
         console.log('error catching the user', error.message);
@@ -58,3 +60,9 @@ const firebaseConfig = {
     return userDocRef;
 
   };
+
+  export const createAuthUserWithEmailAndPassword = async (email,password) => {
+    if(!email || !password) return;
+
+    return await createAuthUserWithEmailAndPassword(auth, email,password)
+  }
