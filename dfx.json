@@ -1,8 +1,0 @@
-{
-    "canisters": {
-        "website": {
-            "type": "assets",
-            "source": ["ebase"]
-        }
-    }
- }
